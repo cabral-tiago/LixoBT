@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Caixote do Lixo Bluetooth</string>
+    <string name="creditos">Créditos</string>
+    <string name="sobre">Sobre a app</string>
+    <string name="ligar">Conectar</string>
+    <string name="desligar">Desconectar</string>
+    <string name="estado_off">Desconectado</string>
+    <string name="estado_on">Conectado</string>
+</resources>
