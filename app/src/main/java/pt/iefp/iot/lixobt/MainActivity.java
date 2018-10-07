@@ -154,9 +154,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void ligar(){
         //TODO isto pode ser feito na função de escolher dispositivo, na secção de successo, é mais garantido!
-        btnDesligar.setVisibility(View.VISIBLE);
-        btnLigar.setVisibility(View.GONE);
-        txtEstado.setText(R.string.estado_on);
+
+        escolherDispositivo();
     }
 
     private void desligar(){
@@ -198,7 +197,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void escolherDispositivo(){
 
-        //TODO A LISTA TEM DE SER DE TODOS OS DISPOSITIVOS E NÃO APENAS DOS EMPARELHADOS! VERIFICAR!!!
+        //TODO se possivel mudar para encontrar todos os dispositivos, provavelmente trabalhoso
 
         //Limpar dispositivo seleccionado! é sempre feita a escolha!
         dispositivoSeleccionado = null;
@@ -223,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
                     .setItems(arLista, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int which) {
                             dispositivoSeleccionado = mBluetoothAdapter.getRemoteDevice(arListaAddress[which]);
+                            conectar();
                         }
                     })
                     .show();
@@ -257,6 +257,7 @@ public class MainActivity extends AppCompatActivity {
         else{
             //TODO em construção!
             BluetoothDevice device = dispositivoSeleccionado;
+
 
             //TODO só para testes! apagar mais tarde!!!!!!
             Toast.makeText(MainActivity.this,
@@ -349,6 +350,11 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if(success){
+
+                btnDesligar.setVisibility(View.VISIBLE);
+                btnLigar.setVisibility(View.GONE);
+                txtEstado.setText(R.string.estado_on);
+
                 //connect successful
                 //TODO mudar esta mensagem
                 final String msgconnected = "connect successful:\n"
