@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        myUUID = UUID.fromString(UUID_STRING_WELL_KNOWN_SPP);
+
         //Definir objectos do ecrã
         btnLigar = findViewById(R.id.btnLigar);
         btnLigar.setOnClickListener(btnLigar_click);
@@ -125,7 +127,7 @@ public class MainActivity extends AppCompatActivity {
     private void menu1(){
         AlertDialog.Builder dialogoCreditos = new AlertDialog.Builder(MainActivity.this);
         dialogoCreditos.setTitle("Créditos")
-                .setMessage("Aplicação Android:\nTiago Cabral\n\nProgramação e Montagem do Arduino:\nAntídio Costa")
+                .setMessage("Aplicação Android:\nTiago Cabral\n\nDesenvolvimento em Arduino:\nAntídio Costa")
                 .setNeutralButton("Fechar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -137,7 +139,7 @@ public class MainActivity extends AppCompatActivity {
     private void menu2(){
         AlertDialog.Builder dialogoSobre = new AlertDialog.Builder(MainActivity.this);
         dialogoSobre.setTitle("Sobre")
-                .setMessage("Lixeira Bluetooth\nVersão 1.0\n\nTurma IoT-Tarde 2018 - IEFP Aveiro")
+                .setMessage("Caixote do Lixo Bluetooth\nVersão 1.0\n\nIoT 2018 - IEFP Aveiro")
                 .setNeutralButton("Fechar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
