@@ -136,7 +136,7 @@ public class MainActivity extends AppCompatActivity {
     private void menu2(){
         AlertDialog.Builder dialogoSobre = new AlertDialog.Builder(MainActivity.this);
         dialogoSobre.setTitle("Sobre")
-                .setMessage("Caixote do Lixo Bluetooth\nVersão 1.0\n\nIoT 2018 - IEFP Aveiro")
+                .setMessage("Smart Dustbin\nVersão 1.0\n\nIoT 2018 - IEFP Aveiro")
                 .setNeutralButton("Fechar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -367,13 +367,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         public void cancel() {
-
-            Toast.makeText(getApplicationContext(),
-                    "Ligação Bluetooth terminada",
-                    Toast.LENGTH_LONG).show();
-
             try {
                 bluetoothSocket.close();
+                Toast.makeText(MainActivity.this, "Ligação terminada.", Toast.LENGTH_LONG).show();
             } catch (IOException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
@@ -417,41 +413,34 @@ public class MainActivity extends AppCompatActivity {
             int readBufferPosition = 0;
 
             while (true) {
-                try {
-                    int bytesAvailable = connectedInputStream.available();
-                    if (bytesAvailable > 0) {
-                        byte[] packetBytes = new byte[bytesAvailable];
-                        connectedInputStream.read(packetBytes);
-                        for (int i = 0; i < bytesAvailable; i++) {
-                            byte b = packetBytes[i];
-                            if (b == delimiter) {
-                                byte[] encodedBytes = new byte[readBufferPosition];
-                                System.arraycopy(buffer, 0, encodedBytes, 0, encodedBytes.length);
-                                final String data = new String(encodedBytes, "US-ASCII");
-                                readBufferPosition = 0;
+                    try {
+                        int bytesAvailable = connectedInputStream.available();
+                        if (bytesAvailable > 0) {
+                            byte[] packetBytes = new byte[bytesAvailable];
+                            connectedInputStream.read(packetBytes);
+                            for (int i = 0; i < bytesAvailable; i++) {
+                                byte b = packetBytes[i];
+                                if (b == delimiter) {
+                                    byte[] encodedBytes = new byte[readBufferPosition];
+                                    System.arraycopy(buffer, 0, encodedBytes, 0, encodedBytes.length);
+                                    final String data = new String(encodedBytes, "US-ASCII");
+                                    readBufferPosition = 0;
 
-                                runOnUiThread(new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        atualizarLixo(data);
-                                    }
-                                });
-                            } else {
-                                buffer[readBufferPosition++] = b;
+                                    runOnUiThread(new Runnable() {
+                                        @Override
+                                        public void run() {
+                                            atualizarLixo(data);
+                                        }
+                                    });
+                                } else {
+                                    buffer[readBufferPosition++] = b;
+                                }
                             }
                         }
+                    } catch (IOException e) {
+                        // nada, ou a aplicação encrava
+
                     }
-                } catch (IOException e) {
-
-                    runOnUiThread(new Runnable(){
-                        @Override
-                        public void run() {
-
-                            Toast.makeText(MainActivity.this, "Ligação perdida.", Toast.LENGTH_LONG).show();
-                            desligar();
-                        }});
-
-                }
             }
         }
 

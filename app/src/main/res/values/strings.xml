@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Caixote do Lixo Bluetooth</string>
+    <string name="app_name">Smart Dustbin</string>
     <string name="creditos">Créditos</string>
     <string name="sobre">Sobre a app</string>
     <string name="ligar">Conectar</string>
