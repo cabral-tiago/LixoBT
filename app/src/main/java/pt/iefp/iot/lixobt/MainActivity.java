@@ -179,6 +179,7 @@ public class MainActivity extends AppCompatActivity {
         //TODO pode-se adicionar alertas a cada nivel! para explorar mais tarde...
 
         int nivelLixo = num;
+        txtEstado.setText(num + " %");
         if(nivelLixo<25){
             imgLixo.setImageResource(R.drawable.trash0);
         }
@@ -352,11 +353,6 @@ public class MainActivity extends AppCompatActivity {
             }
 
             if(success){
-
-                btnDesligar.setVisibility(View.VISIBLE);
-                btnLigar.setVisibility(View.GONE);
-                txtEstado.setText(R.string.estado_on);
-
                 //connect successful
                 //TODO mudar esta mensagem
                 final String msgconnected = "connect successful:\n"
@@ -367,6 +363,11 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void run() {
+
+                        btnDesligar.setVisibility(View.VISIBLE);
+                        btnLigar.setVisibility(View.GONE);
+                        txtEstado.setText(R.string.estado_on);
+
                         /* TODO IMPLEMENTAR
                         textStatus.setText("");
                         textByteCnt.setText(""); */
