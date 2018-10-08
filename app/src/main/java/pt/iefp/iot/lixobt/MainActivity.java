@@ -16,9 +16,6 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import org.w3c.dom.Text;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -175,24 +172,29 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void atualizarLixo(int num){
-        //TODO pode-se adicionar alertas a cada nivel! para explorar mais tarde...
+    private void atualizarLixo(String str){
+        int num = 0;
+        try{
+            num = Integer.parseInt(str.trim());
+        }
+        catch(NumberFormatException e){
+            //nada
+        }
 
-        int nivelLixo = num;
         txtEstado.setText(num + " %");
-        if(nivelLixo<25){
+        if(num<25){
             imgLixo.setImageResource(R.drawable.trash0);
         }
-        if(nivelLixo>=25 & nivelLixo<50){
+        if(num>=25 & num<50){
             imgLixo.setImageResource(R.drawable.trash25);
         }
-        if(nivelLixo>=50 & nivelLixo<75){
+        if(num>=50 & num<75){
             imgLixo.setImageResource(R.drawable.trash50);
         }
-        if(nivelLixo>=75 & nivelLixo<100){
+        if(num>=75 & num<100){
             imgLixo.setImageResource(R.drawable.trash75);
         }
-        if(nivelLixo==100){
+        if(num==100){
             imgLixo.setImageResource(R.drawable.trash100);
         }
 
@@ -261,16 +263,6 @@ public class MainActivity extends AppCompatActivity {
             //TODO em construção!
             BluetoothDevice device = dispositivoSeleccionado;
 
-
-            //TODO só para testes! apagar mais tarde!!!!!!
-            Toast.makeText(MainActivity.this,
-                    "Name: " + device.getName() + "\n"
-                            + "Address: " + device.getAddress() + "\n"
-                            + "BondState: " + device.getBondState() + "\n"
-                            + "BluetoothClass: " + device.getBluetoothClass() + "\n"
-                            + "Class: " + device.getClass(),
-                    Toast.LENGTH_LONG).show();
-
             myThreadConnectBTdevice = new ThreadConnectBTdevice(device);
             myThreadConnectBTdevice.start();
 
@@ -316,11 +308,11 @@ public class MainActivity extends AppCompatActivity {
 
             try {
                 bluetoothSocket = device.createRfcommSocketToServiceRecord(myUUID);
-                Toast.makeText(getApplicationContext(),"Ponto 1", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"A tentar ligar", Toast.LENGTH_LONG).show();
                 // TODO IMPLEMENTAR ISTO textStatus.setText("bluetoothSocket: \n" + bluetoothSocket);
             } catch (IOException e) {
                 // TODO Auto-generated catch block
-                Toast.makeText(getApplicationContext(),"Erro 1", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(),"Erro: Bluetooth foi desligado durante a operação!", Toast.LENGTH_LONG).show();
                 e.printStackTrace();
             }
         }
@@ -339,7 +331,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void run() {
-                        Toast.makeText(getApplicationContext(),"Erro 2 \n"+ eMessage, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getApplicationContext(),"Erro de ligação: Dispositivo fora de alcance ou ocupado. Tente de novo.", Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -347,17 +339,12 @@ public class MainActivity extends AppCompatActivity {
                     bluetoothSocket.close();
                 } catch (IOException e1) {
                     // TODO Auto-generated catch block
-                    Toast.makeText(getApplicationContext(),"Erro 3", Toast.LENGTH_LONG).show();
                     e1.printStackTrace();
                 }
             }
 
             if(success){
                 //connect successful
-                //TODO mudar esta mensagem
-                final String msgconnected = "connect successful:\n"
-                        + "BluetoothSocket: " + bluetoothSocket + "\n"
-                        + "BluetoothDevice: " + bluetoothDevice;
 
                 runOnUiThread(new Runnable() {
 
@@ -368,22 +355,14 @@ public class MainActivity extends AppCompatActivity {
                         btnLigar.setVisibility(View.GONE);
                         txtEstado.setText(R.string.estado_on);
 
-                        /* TODO IMPLEMENTAR
-                        textStatus.setText("");
-                        textByteCnt.setText(""); */
-                        // TODO mudar esta mensagem
-                        Toast.makeText(MainActivity.this, msgconnected, Toast.LENGTH_LONG).show();
-                        /* TODO IMPLEMENTAR
-                        listViewPairedDevice.setVisibility(View.GONE);
-                        inputPane.setVisibility(View.VISIBLE);
-                        */
+                        Toast.makeText(MainActivity.this, "Ligação com sucesso!", Toast.LENGTH_LONG).show();
                     }
                 });
 
                 startThreadConnected(bluetoothSocket);
 
             }else{
-                //TODO implementar aqui um desligar tambem!!!
+                // nao deveria chegar aqui
             }
         }
 
@@ -433,51 +412,45 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         public void run() {
-            byte[] buffer = new byte[1024];
-            int bytes;
-
-            //desnecessario?
-            String strRx = "";
+            final byte delimiter = 10;
+            byte[] buffer = new byte[4];
+            int readBufferPosition = 0;
 
             while (true) {
                 try {
-                    bytes = connectedInputStream.read(buffer);
-                    final String strReceived = new String(buffer, 0, bytes);
-                    //desnecessario final String strByteCnt = String.valueOf(bytes) + " bytes received.\n";
+                    int bytesAvailable = connectedInputStream.available();
+                    if (bytesAvailable > 0) {
+                        byte[] packetBytes = new byte[bytesAvailable];
+                        connectedInputStream.read(packetBytes);
+                        for (int i = 0; i < bytesAvailable; i++) {
+                            byte b = packetBytes[i];
+                            if (b == delimiter) {
+                                byte[] encodedBytes = new byte[readBufferPosition];
+                                System.arraycopy(buffer, 0, encodedBytes, 0, encodedBytes.length);
+                                final String data = new String(encodedBytes, "US-ASCII");
+                                readBufferPosition = 0;
 
-                    runOnUiThread(new Runnable(){
-
-                        @Override
-                        public void run() {
-                            /* TODO IMPLEMENTAR
-                               TODO aqui vem todo o codigo executado quando é obtida alguma informação
-                            textStatus.append(strReceived);
-                            textByteCnt.append(strByteCnt);
-                            */
-                            try {
-                                int nr = Integer.parseInt(strReceived);
-                                atualizarLixo(nr);
-                            } catch(NumberFormatException nfe) {
-                                //TODO provavelmente seria melhor desligar a este momento pois estamos a receber informações erradas! verificar!
+                                runOnUiThread(new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        atualizarLixo(data);
+                                    }
+                                });
+                            } else {
+                                buffer[readBufferPosition++] = b;
                             }
-                        }});
-
+                        }
+                    }
                 } catch (IOException e) {
-                    // TODO Auto-generated catch block
 
-                    // TODO aqui PROVAVELMENTE é a perda de ligação, adicionar toast e verificar a necessidade de correr desligar()! (quase certamente necessário)
-                    e.printStackTrace();
-
-                    final String msgConnectionLost = "Connection lost:\n"
-                            + e.getMessage();
                     runOnUiThread(new Runnable(){
-
                         @Override
                         public void run() {
-                            /* TODO IMLPEMENTAR
-                            textStatus.setText(msgConnectionLost);
-                            */
+
+                            Toast.makeText(MainActivity.this, "Ligação perdida.", Toast.LENGTH_LONG).show();
+                            desligar();
                         }});
+
                 }
             }
         }
