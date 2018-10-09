@@ -6,6 +6,11 @@ import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.graphics.drawable.LayerDrawable;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import java.io.IOException;
@@ -47,6 +53,13 @@ public class MainActivity extends AppCompatActivity {
         imgLixo = findViewById(R.id.imageView);
         imgLixo.setImageResource(R.drawable.trash0);
         txtEstado = findViewById(R.id.txtEstado);
+        txtLixo = findViewById(R.id.txtLixo);
+        progressBar = findViewById(R.id.progressBar);
+
+        progressBarDrawable = (LayerDrawable) progressBar.getProgressDrawable();
+        backgroundDrawable = progressBarDrawable.getDrawable(0);
+        progressDrawable = progressBarDrawable.getDrawable(1);
+        backgroundDrawable.setColorFilter(Color.parseColor("#e6e6e6"), PorterDuff.Mode.SRC_IN);
 
         //Pedir para ligar o Bluetooth
         Intent enableBtIntent = new Intent(BluetoothAdapter.ACTION_REQUEST_ENABLE);
@@ -83,6 +96,8 @@ public class MainActivity extends AppCompatActivity {
     private Button btnAbrir;
     private Button btnFechar;
     private TextView txtEstado;
+    private TextView txtLixo;
+    private ProgressBar progressBar;
 
 
 
@@ -167,6 +182,10 @@ public class MainActivity extends AppCompatActivity {
 
     // Variaveis
 
+    LayerDrawable progressBarDrawable = null;
+    Drawable backgroundDrawable = null;
+    Drawable progressDrawable = null;
+
 
 
     // Funções
@@ -218,21 +237,27 @@ public class MainActivity extends AppCompatActivity {
             //nada
         }
 
-        txtEstado.setText(num + " %");
+        txtLixo.setText(num + " %");
+        progressBar.setProgress(num);
         if(num<25){
             imgLixo.setImageResource(R.drawable.trash0);
+            progressDrawable.setColorFilter(Color.parseColor("#b9f6ca"), PorterDuff.Mode.SRC_IN);
         }
         if(num>=25 & num<50){
             imgLixo.setImageResource(R.drawable.trash25);
+            progressDrawable.setColorFilter(Color.parseColor("#b9f6ca"), PorterDuff.Mode.SRC_IN);
         }
         if(num>=50 & num<75){
             imgLixo.setImageResource(R.drawable.trash50);
+            progressDrawable.setColorFilter(Color.parseColor("#b9f6ca"), PorterDuff.Mode.SRC_IN);
         }
         if(num>=75 & num<100){
             imgLixo.setImageResource(R.drawable.trash75);
+            progressDrawable.setColorFilter(Color.parseColor("#ff9900"), PorterDuff.Mode.SRC_IN);
         }
         if(num==100){
             imgLixo.setImageResource(R.drawable.trash100);
+            progressDrawable.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
         }
 
     }
