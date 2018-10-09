@@ -189,8 +189,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void ligar(){
-        //TODO isto pode ser feito na função de escolher dispositivo, na secção de successo, é mais garantido!
-
         escolherDispositivo();
     }
 
@@ -453,6 +451,7 @@ public class MainActivity extends AppCompatActivity {
             int readBufferPosition = 0;
 
             while (true) {
+                if (connectedBluetoothSocket.isConnected()) {
                     try {
                         int bytesAvailable = connectedInputStream.available();
                         if (bytesAvailable > 0) {
@@ -481,6 +480,9 @@ public class MainActivity extends AppCompatActivity {
                         // nada, ou a aplicação encrava
 
                     }
+                }else{
+                    // ?
+                }
             }
         }
 
