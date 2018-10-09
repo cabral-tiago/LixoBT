@@ -40,6 +40,10 @@ public class MainActivity extends AppCompatActivity {
         btnLigar.setOnClickListener(btnLigar_click);
         btnDesligar = findViewById(R.id.btnDesligar);
         btnDesligar.setOnClickListener(btnDesligar_click);
+        btnAbrir = findViewById(R.id.btnAbrir);
+        btnAbrir.setOnClickListener(btnAbrir_click);
+        btnFechar = findViewById(R.id.btnFechar);
+        btnFechar.setOnClickListener(btnFechar_click);
         imgLixo = findViewById(R.id.imageView);
         imgLixo.setImageResource(R.drawable.trash0);
         txtEstado = findViewById(R.id.txtEstado);
@@ -76,6 +80,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView imgLixo;
     private Button btnLigar;
     private Button btnDesligar;
+    private Button btnAbrir;
+    private Button btnFechar;
     private TextView txtEstado;
 
 
@@ -93,6 +99,20 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             desligar();
+        }
+    };
+
+    private View.OnClickListener btnAbrir_click = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            abrir();
+        }
+    };
+
+    private View.OnClickListener btnFechar_click = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            fechar();
         }
     };
 
@@ -136,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
     private void menu2(){
         AlertDialog.Builder dialogoSobre = new AlertDialog.Builder(MainActivity.this);
         dialogoSobre.setTitle("Sobre")
-                .setMessage("Smart Dustbin\nVersão 1.0\n\nIoT 2018 - IEFP Aveiro")
+                .setMessage("Smart Dustbin\nVersão 1.0\n\nIoT Turma B 2018 - IEFP Aveiro")
                 .setNeutralButton("Fechar", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int which) {
                         dialog.dismiss();
@@ -151,6 +171,23 @@ public class MainActivity extends AppCompatActivity {
 
     // Funções
 
+    private void abrir(){
+        btnAbrir.setVisibility(View.GONE);
+        btnFechar.setVisibility(View.VISIBLE);
+
+        byte[] bytesToSend = "A".getBytes();
+        myThreadConnected.write(bytesToSend);
+
+    }
+
+    private void fechar(){
+        btnAbrir.setVisibility(View.VISIBLE);
+        btnFechar.setVisibility(View.GONE);
+
+        byte[] bytesToSend = "B".getBytes();
+        myThreadConnected.write(bytesToSend);
+    }
+
     private void ligar(){
         //TODO isto pode ser feito na função de escolher dispositivo, na secção de successo, é mais garantido!
 
@@ -159,6 +196,8 @@ public class MainActivity extends AppCompatActivity {
 
     private void desligar(){
         btnDesligar.setVisibility(View.GONE);
+        btnAbrir.setVisibility(View.GONE);
+        btnFechar.setVisibility(View.GONE);
         btnLigar.setVisibility(View.VISIBLE);
         txtEstado.setText(R.string.estado_off);
 
@@ -353,6 +392,7 @@ public class MainActivity extends AppCompatActivity {
 
                         btnDesligar.setVisibility(View.VISIBLE);
                         btnLigar.setVisibility(View.GONE);
+                        btnAbrir.setVisibility(View.VISIBLE);
                         txtEstado.setText(R.string.estado_on);
 
                         Toast.makeText(MainActivity.this, "Ligação com sucesso!", Toast.LENGTH_LONG).show();
