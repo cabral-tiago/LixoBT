@@ -18,6 +18,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -42,16 +43,16 @@ public class MainActivity extends AppCompatActivity {
         myUUID = UUID.fromString(UUID_STRING_WELL_KNOWN_SPP);
 
         //Definir objectos do ecrã
-        btnLigar = findViewById(R.id.btnLigar);
+        btnLigar = findViewById(R.id.imgbtnLigar);
         btnLigar.setOnClickListener(btnLigar_click);
-        btnDesligar = findViewById(R.id.btnDesligar);
+        btnDesligar = findViewById(R.id.imgbtnDesligar);
         btnDesligar.setOnClickListener(btnDesligar_click);
-        btnAbrir = findViewById(R.id.btnAbrir);
+        btnAbrir = findViewById(R.id.imgbtnAbrir);
         btnAbrir.setOnClickListener(btnAbrir_click);
-        btnFechar = findViewById(R.id.btnFechar);
+        btnFechar = findViewById(R.id.imgbtnFechar);
         btnFechar.setOnClickListener(btnFechar_click);
         imgLixo = findViewById(R.id.imageView);
-        imgLixo.setImageResource(R.drawable.trash0);
+        imgLixo.setImageResource(R.drawable.lixo0);
         txtEstado = findViewById(R.id.txtEstado);
         txtLixo = findViewById(R.id.txtLixo);
         progressBar = findViewById(R.id.progressBar);
@@ -91,10 +92,14 @@ public class MainActivity extends AppCompatActivity {
 
     // Objectos
     private ImageView imgLixo;
-    private Button btnLigar;
-    private Button btnDesligar;
-    private Button btnAbrir;
-    private Button btnFechar;
+    //private Button btnLigar;
+    //private Button btnDesligar;
+    //private Button btnAbrir;
+    //private Button btnFechar;
+    private ImageButton btnAbrir;
+    private ImageButton btnFechar;
+    private ImageButton btnLigar;
+    private ImageButton btnDesligar;
     private TextView txtEstado;
     private TextView txtLixo;
     private ProgressBar progressBar;
@@ -240,23 +245,23 @@ public class MainActivity extends AppCompatActivity {
         txtLixo.setText(num + " %");
         progressBar.setProgress(num);
         if(num<25){
-            imgLixo.setImageResource(R.drawable.trash0);
+            imgLixo.setImageResource(R.drawable.lixo0);
             progressDrawable.setColorFilter(Color.parseColor("#b9f6ca"), PorterDuff.Mode.SRC_IN);
         }
         if(num>=25 & num<50){
-            imgLixo.setImageResource(R.drawable.trash25);
+            imgLixo.setImageResource(R.drawable.lixo25);
             progressDrawable.setColorFilter(Color.parseColor("#b9f6ca"), PorterDuff.Mode.SRC_IN);
         }
         if(num>=50 & num<75){
-            imgLixo.setImageResource(R.drawable.trash50);
+            imgLixo.setImageResource(R.drawable.lixo50);
             progressDrawable.setColorFilter(Color.parseColor("#b9f6ca"), PorterDuff.Mode.SRC_IN);
         }
         if(num>=75 & num<100){
-            imgLixo.setImageResource(R.drawable.trash75);
+            imgLixo.setImageResource(R.drawable.lixo75);
             progressDrawable.setColorFilter(Color.parseColor("#ff9900"), PorterDuff.Mode.SRC_IN);
         }
         if(num==100){
-            imgLixo.setImageResource(R.drawable.trash100);
+            imgLixo.setImageResource(R.drawable.lixo100);
             progressDrawable.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
         }
 
