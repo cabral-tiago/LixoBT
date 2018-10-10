@@ -10,6 +10,7 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
+import android.os.CountDownTimer;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -28,6 +29,7 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 import java.util.Set;
 import java.util.UUID;
 
@@ -56,6 +58,9 @@ public class MainActivity extends AppCompatActivity {
         txtEstado = findViewById(R.id.txtEstado);
         txtLixo = findViewById(R.id.txtLixo);
         progressBar = findViewById(R.id.progressBar);
+
+
+        btnFechar.setClickable(false);
 
         //para xxhdpi com alturas superiores às standard... em especifico para todos os xxhdpi de 1080x2160. Não é uma solução muito boa!
 
@@ -105,10 +110,6 @@ public class MainActivity extends AppCompatActivity {
 
     // Objectos
     private ImageView imgLixo;
-    //private Button btnLigar;
-    //private Button btnDesligar;
-    //private Button btnAbrir;
-    //private Button btnFechar;
     private ImageButton btnAbrir;
     private ImageButton btnFechar;
     private ImageButton btnLigar;
@@ -247,9 +248,13 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void atualizarLixo(String str){
+        str = str.trim();
+        String straberto = str.substring(str.length()-1);
+        String strnum = str.substring(0, str.length()-1);
+
         int num = 0;
         try{
-            num = Integer.parseInt(str.trim());
+            num = Integer.parseInt(strnum);
         }
         catch(NumberFormatException e){
             //nada
@@ -276,6 +281,15 @@ public class MainActivity extends AppCompatActivity {
         if(num==100){
             imgLixo.setImageResource(R.drawable.lixo100);
             progressDrawable.setColorFilter(Color.RED, PorterDuff.Mode.SRC_IN);
+        }
+
+        if(straberto.equals("A")){
+            btnAbrir.setVisibility(View.GONE);
+            btnFechar.setVisibility(View.VISIBLE);
+        }
+        if(straberto.equals("B")){
+            btnFechar.setVisibility(View.GONE);
+            btnAbrir.setVisibility(View.VISIBLE);
         }
 
     }
@@ -490,7 +504,7 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public void run() {
             final byte delimiter = 10;
-            byte[] buffer = new byte[4];
+            byte[] buffer = new byte[8];
             int readBufferPosition = 0;
 
             while (true) {
