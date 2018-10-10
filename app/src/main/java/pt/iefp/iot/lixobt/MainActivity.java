@@ -10,14 +10,14 @@ import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.graphics.drawable.LayerDrawable;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.view.ViewGroup;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -56,6 +56,19 @@ public class MainActivity extends AppCompatActivity {
         txtEstado = findViewById(R.id.txtEstado);
         txtLixo = findViewById(R.id.txtLixo);
         progressBar = findViewById(R.id.progressBar);
+
+        //para xxhdpi com alturas superiores às standard... em especifico para todos os xxhdpi de 1080x2160. Não é uma solução muito boa!
+
+        DisplayMetrics displayMetrics = getApplicationContext().getResources().getDisplayMetrics();
+        float dpHeight = displayMetrics.heightPixels / displayMetrics.density;
+        int dpInt = Math.round(dpHeight);
+
+        if(dpInt==738){
+            final ViewGroup.MarginLayoutParams mar =(ViewGroup.MarginLayoutParams)txtLixo.getLayoutParams();
+            mar.setMargins(mar.leftMargin,mar.leftMargin,mar.rightMargin,200);
+            txtLixo.setLayoutParams(mar);
+        }
+
 
         progressBarDrawable = (LayerDrawable) progressBar.getProgressDrawable();
         backgroundDrawable = progressBarDrawable.getDrawable(0);
