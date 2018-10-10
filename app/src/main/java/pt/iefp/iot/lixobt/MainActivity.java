@@ -65,7 +65,7 @@ public class MainActivity extends AppCompatActivity {
 
         if(dpInt==738){
             final ViewGroup.MarginLayoutParams mar =(ViewGroup.MarginLayoutParams)txtLixo.getLayoutParams();
-            mar.setMargins(mar.leftMargin,mar.leftMargin,mar.rightMargin,200);
+            mar.setMargins(mar.leftMargin,mar.leftMargin,mar.rightMargin,190);
             txtLixo.setLayoutParams(mar);
         }
 
